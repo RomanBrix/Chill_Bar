@@ -1,0 +1,8 @@
+#main-page{
+    @media (max-width:767px){
+        overflow: hidden;
+    }
+    @import './intro.scss';
+    @import './slider.scss';
+    @import './about.scss';
+}
