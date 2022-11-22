@@ -9,7 +9,10 @@ import Cok from "./Components/legals/cookie";
 import Ref from "./Components/legals/ref";
 import MainPage from "./Components/main";
 import Products from "./Components/products";
+import VerifyProduct from "./Components/VerifyProduct";
 import { ProductProvider } from "./hoc/porductProvider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
     const [cart, toggleCart] = useState(false);
@@ -44,6 +47,9 @@ function App() {
             <Route path="/contact" element={<Contacts />} />
 
 
+            <Route path="/verify-product" element={<VerifyProduct />} />
+
+
 
             <Route path="/conf" element={<Confid />} />
             <Route path="/cookie" element={<Cok />} />
@@ -52,6 +58,7 @@ function App() {
           </Route>
         </Routes>
         </div>
+        <ToastContainer />
       </ProductProvider>
     </div>
   );

@@ -38,7 +38,9 @@ function Header(props) {
                     <li onClick={()=>{navigate('/about')}}>Про нас</li>
                     <li onClick={()=>{navigate('/contact')}}>Контакти</li>
                     <li onClick={()=>{
-                        window.open('https://joyetech.com/security-code','_blank')
+                        window.open('/verify-product.php', "_self")
+                        // navigate('/verify-product.php')
+
                     }}>Перевірити ChillBar</li>
                 </ul>
                 <div className="cart-container" onClick={()=>{toggleCart(true)}}>

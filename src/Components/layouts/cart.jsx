@@ -19,7 +19,7 @@ function Cart(props) {
       }}
     >
       {request ? (
-        <SendRequest products={products} />
+        <SendRequest products={products} toggleCart={props.toggleCart}/>
       ) : (
         <div
           className="container"

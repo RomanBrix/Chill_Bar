@@ -1,25 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Jura:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Jura:wght@400;500;700&display=swap");
 
-html{
+html {
     padding: 0;
     margin: 0;
 
-    font-family: 'Jura', sans-serif;
-    body{
+    font-family: "Jura", sans-serif;
+    body {
         padding: 0;
         margin: 0;
 
-        #root{
+        #root {
             margin: 0;
             padding: 0;
-            .App{
-                background: #F6F1FF;
-                .forContainer{
+            .App {
+                background: #f6f1ff;
+                .forContainer {
                     display: flex;
                     align-items: flex-start;
                     justify-content: center;
 
-                    .container{
+                    .container {
                         width: 1440px;
                         min-width: 1440px;
                         box-sizing: border-box;
@@ -27,49 +27,128 @@ html{
                         // background: red;
                     }
 
-                    @media (max-width:1400px){
-                        .container{
+                    @media (max-width: 1400px) {
+                        .container {
                             width: 1024px;
                             min-width: 1024px;
                             padding: 0 30px;
                             // padding: 0 15px;
                         }
                     }
-                    @media (max-width:1023px){
-                        .container{
+                    @media (max-width: 1023px) {
+                        .container {
                             width: 768px;
                             min-width: 768px;
                             padding: 0 30px;
                         }
                     }
 
-                    @media (max-width:767px){
-                        .container{
+                    @media (max-width: 767px) {
+                        .container {
                             width: 375px;
                             min-width: 375px;
                             padding: 0 15px;
                         }
                     }
                 }
+                .verify {
+                    min-height: calc(100vh - 282px - 72px);
 
+                    .container {
+                        flex-direction: column;
+                        h1 {
+                            text-align: center;
+                            margin: 30px 0;
+                        }
+                        img {
+                            width: 300px;
+                            margin: 0 auto;
+                        }
+                        .block {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            p {
+                                width: 70%;
+                                font-size: 1.5rem;
+                                letter-spacing: 1px;
+                                margin-top: 30px;
+                                text-align: center;
+                                @media (max-width: 767px) {
+                                    width: 85%;
+                                }
+                            }
+                            input {
+                                width: 275px;
+                                border-radius: 4px;
+                                margin-bottom: 35px;
+
+                                box-shadow: 0px 3px 10px 1px
+                                    rgba($color: #000000, $alpha: 0.15);
+                                padding: 20px 12px;
+                                // width: 250px;
+                                box-sizing: border-box;
+                                margin-bottom: 25px;
+                                border: 2px solid transparent;
+                                transition: 0.25s;
+                                border-radius: 6px;
+                                outline: none;
+                                font-weight: bold;
+
+                                &:hover,
+                                &:focus {
+                                    border-color: #b495de;
+                                }
+                            }
+
+                            .btn {
+                                position: relative;
+                                z-index: 2;
+                                background: #ffffff;
+                                border-radius: 15px;
+                                filter: drop-shadow(0px 4px 8px #b495de);
+                                box-sizing: border-box;
+                                padding: 14px 8px;
+                                min-width: 100px;
+                                text-align: center;
+                                cursor: pointer;
+                                transition: 0.25s;
+                                font-weight: bold;
+                                width: 275px;
+                                border: none;
+                                margin-bottom: 20px;
+                                //   font-size: 30px;
+                                //   line-height: 35px;
+                                &:hover {
+                                    filter: drop-shadow(
+                                        0px 4px 8px rgba(180, 149, 222, 0.6)
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
 
                 user-select: none;
 
-                @import './layouts/header.scss';
-                @import './main/index.scss';
-                @import './products/index.scss';
-                @import './about/index.scss';
-                @import './layouts/footer.scss';
-                @import './layouts/cart.scss';
+                @import "./layouts/header.scss";
+                @import "./main/index.scss";
+                @import "./products/index.scss";
+                @import "./about/index.scss";
+                @import "./layouts/footer.scss";
+                @import "./layouts/cart.scss";
 
-                #blured{
-                    transition: .25s;
-                    &.active-blured{
-                        filter:blur(4px)
+                #blured {
+                    transition: 0.25s;
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 100vh;
+                    &.active-blured {
+                        filter: blur(4px);
                     }
                 }
             }
-            .sevka{
+            .sevka {
                 opacity: 0;
                 position: fixed;
                 width: 100%;
@@ -78,11 +157,11 @@ html{
                 left: 0;
                 top: 0;
                 color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: -999999;
-        }
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: -999999;
+            }
         }
     }
 }
