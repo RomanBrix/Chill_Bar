@@ -11,57 +11,56 @@ import MainPage from "./Components/main";
 import Products from "./Components/products";
 import VerifyProduct from "./Components/VerifyProduct";
 import { ProductProvider } from "./hoc/porductProvider";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Offer from "./Components/legals/offer";
 
 function App() {
     const [cart, toggleCart] = useState(false);
 
-
-    function handleToggleCart (state){
-        const blur = document.getElementById('blured');
-        blur.classList.toggle('active-blured');
+    function handleToggleCart(state) {
+        const blur = document.getElementById("blured");
+        blur.classList.toggle("active-blured");
         toggleCart(state);
     }
 
     const location = useLocation();
     console.log(location);
 
-    useEffect(()=>{
-      window.scrollTo(0,0)
-    }, [location.pathname])
-  return (
-    <div className="App">
-      <ProductProvider>
-          {
-              cart ? 
-                <Cart toggleCart={handleToggleCart}/>
-              : ''
-          }
-          <div id="blured">
-        <Routes>
-          <Route path="/" element={<Layout toggleCart={handleToggleCart}/>}>
-            <Route index element={<MainPage />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contacts />} />
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
+    return (
+        <div className="App">
+            <ProductProvider>
+                {cart ? <Cart toggleCart={handleToggleCart} /> : ""}
+                <div id="blured">
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<Layout toggleCart={handleToggleCart} />}
+                        >
+                            <Route index element={<MainPage />} />
+                            <Route path="/products" element={<Products />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/contact" element={<Contacts />} />
 
+                            <Route
+                                path="/verify-product"
+                                element={<VerifyProduct />}
+                            />
 
-            <Route path="/verify-product" element={<VerifyProduct />} />
-
-
-
-            <Route path="/conf" element={<Confid />} />
-            <Route path="/cookie" element={<Cok />} />
-            <Route path="/ref" element={<Ref />} />
-
-          </Route>
-        </Routes>
+                            <Route path="/conf" element={<Confid />} />
+                            <Route path="/cookie" element={<Cok />} />
+                            <Route path="/ref" element={<Ref />} />
+                            <Route path="/offer" element={<Offer />} />
+                        </Route>
+                    </Routes>
+                </div>
+                <ToastContainer />
+            </ProductProvider>
         </div>
-        <ToastContainer />
-      </ProductProvider>
-    </div>
-  );
+    );
 }
 
 export default App;
