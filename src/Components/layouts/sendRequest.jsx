@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useProduct from "../../hook/useProduct";
 import { notifyAdmin } from "../../notify";
 import Select from "react-select";
+import useRequestsMethods from "../../hook/useRequestsMethods";
 function SendRequest(props) {
     const [cities, setCities] = useState(null);
     const [searchedCities, setSearchedCities] = useState([]);
@@ -18,18 +19,19 @@ function SendRequest(props) {
         phone: "",
     });
     const { deleteAllProducts } = useProduct();
+    const { createOrder } = useRequestsMethods();
 
     useEffect(() => {
         const storageCities = window.localStorage.getItem("cities");
         const storageAddress = window.localStorage.getItem("adress");
         if (storageCities) {
-            console.log("from cookie");
+            // console.log("from cookie");
             setCities(JSON.parse(storageCities));
         } else {
             getCities();
         }
         if (storageAddress) {
-            console.log("from cookie");
+            // console.log("from cookie");
             setAddresses(JSON.parse(storageAddress));
         } else {
             getAdresses();
@@ -156,8 +158,8 @@ function SendRequest(props) {
     function sendOrder() {
         const { name, phone } = inputs;
         if (name.length > 3 && phone.length > 7) {
-            if (address.length === 0) return;
-            if (city.length === 0) return;
+            if (address?.label.length === 0) return;
+            if (city?.label.length === 0) return;
 
             const { products, toggleCart } = props;
             const productText = products
@@ -171,17 +173,33 @@ function SendRequest(props) {
                 return acc + product.price * product.count;
             }, 0);
             const text = `🤑 Замовлення!\n${productText}\n\n💸Загальна сума: ${totalSumm} uah\n\n🤴 ${name}\n📱 ${phone}\n\n🚚 Доставка:\n🌃 ${city.label}\n🏠 ${address.label}`;
-            // console.log(text)
-            notifyAdmin(text);
-            setInputs({
-                name: "",
-                phone: "",
+
+            const order = {
+                products,
+                user: {
+                    name,
+                    phone,
+                    wearhouse: address.label,
+                    city: city.label,
+                },
+                summ: totalSumm,
+            };
+            //CREATE SELECT TYPE OF PAY
+
+            createOrder(order).then((res) => {
+                console.log(res);
             });
-            alert(
-                "Замовлення відправлено! Ми зв'яжемося з вами найближчим часом!"
-            );
-            deleteAllProducts();
-            toggleCart(false);
+            // console.log(text)
+            // notifyAdmin(text);
+            // setInputs({
+            //     name: "",
+            //     phone: "",
+            // });
+            // alert(
+            //     "Замовлення відправлено! Ми зв'яжемося з вами найближчим часом!"
+            // );
+            // deleteAllProducts();
+            // toggleCart(false);
         } else {
             console.log("error");
         }

@@ -14,6 +14,11 @@ import { ProductProvider } from "./hoc/porductProvider";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Offer from "./Components/legals/offer";
+import AdminLayout from "./Components/layouts/AdminLayout";
+import Enter from "./Components/Admin/Enter";
+import Orders from "./Components/Admin/orders";
+import ThankPage from "./Components/Thank";
+import Settings from "./Components/Admin/Settings";
 
 function App() {
     const [cart, toggleCart] = useState(false);
@@ -25,7 +30,7 @@ function App() {
     }
 
     const location = useLocation();
-    console.log(location);
+    // console.log(location);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -44,6 +49,7 @@ function App() {
                             <Route path="/products" element={<Products />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/contact" element={<Contacts />} />
+                            <Route path="/thank/:id" element={<ThankPage />} />
 
                             <Route
                                 path="/verify-product"
@@ -54,6 +60,11 @@ function App() {
                             <Route path="/cookie" element={<Cok />} />
                             <Route path="/ref" element={<Ref />} />
                             <Route path="/offer" element={<Offer />} />
+                        </Route>
+                        <Route path="/admin" element={<AdminLayout />}>
+                            <Route index element={<Enter />} />
+                            <Route path="orders/*" element={<Orders />} />
+                            <Route path="settings" element={<Settings />} />
                         </Route>
                     </Routes>
                 </div>
