@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Order = require("../models/Order");
+const { notifyAllWithBot } = require("./bot");
 const { verifyTokenAndAuthorization } = require("./verifyToken");
 
 router.post("/new", async (req, res) => {
@@ -10,6 +11,17 @@ router.post("/new", async (req, res) => {
         const { id } = await Order.create(order);
         if (needNotify) {
             // send bot notify
+
+            const productText = order.products
+                .map((product, index) => {
+                    return `${index + 1}. ${
+                        product.title + " " + product.version
+                    } (${product.price} uah/шт) - ${product.count} шт.`;
+                })
+                .join("\n");
+            const { name, phone, city, wearhouse } = order.user;
+            const text = `🤑 Замовлення!\n${productText}\n\n💸Загальна сума: ${order.summ} uah\n\n🤴 ${name}\n📱 ${phone}\n\n🚚 Доставка:\n🌃 ${city}\n🏠 ${wearhouse}`;
+            notifyAllWithBot(text);
         }
         // console.log(id);
         res.status(200).json({ status: "new", id });

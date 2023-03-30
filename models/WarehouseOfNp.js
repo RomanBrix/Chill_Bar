@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const WarehouseOfNpSchema = new Schema(
     {
-        city_ua: { type: String },
-        city_ru: { type: String },
+        city: { type: String },
+        // city_ru: { type: String },
 
-        warehouse_ua: { type: String },
-        warehouse_ru: { type: String },
+        warehouse: { type: String },
+        // warehouse_ru: { type: String },
         ref: { type: String },
     },
     { timestamps: true }
@@ -15,4 +15,4 @@ const WarehouseOfNpSchema = new Schema(
 
 module.exports = mongoose.model("WarehouseOfNp", WarehouseOfNpSchema);
 
-Model.createCollection().then((docs) => {});
+// Model.createCollection().then((docs) => {});

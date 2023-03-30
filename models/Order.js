@@ -14,6 +14,7 @@ const OrderSchema = new Schema(
         products: { type: mongoose.Schema.Types.Mixed },
         id: { type: String, unique: true },
         status: { type: String, default: "new" },
+        ttn: { type: String, default: null },
     },
     { timestamps: true }
 );

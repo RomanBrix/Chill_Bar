@@ -11,10 +11,13 @@ const http = require("http");
 const authRoute = require("./routes/auth");
 const orderRoute = require("./routes/orders");
 const userRoute = require("./routes/users");
+const npRoute = require("./routes/np");
+const { botRoute } = require("./routes/bot");
+
+// console.log(botRoute);
 // const productsRoute = require("./routes/products");
 // const filtersRoute = require("./routes/filters");
 // const checkRoute = require("./routes/check");
-// const npRoute = require("./routes/np");
 
 // const axios = require("axios");
 // const CryptoJS = require("crypto-js");
@@ -57,10 +60,11 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/user", userRoute);
+app.use("/api/np", npRoute);
+app.use("/api/bot", botRoute);
 // app.use("/api/products", productsRoute);
 // app.use("/api/filters", filtersRoute);
 // app.use("/api/check", checkRoute);
-// app.use("/api/np", npRoute);
 
 /*
 file upload 
