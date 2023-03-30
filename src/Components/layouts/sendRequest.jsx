@@ -4,11 +4,11 @@ import useProduct from "../../hook/useProduct";
 import { notifyAdmin } from "../../notify";
 import Select from "react-select";
 import useRequestsMethods from "../../hook/useRequestsMethods";
+import { toast } from "react-toastify";
 function SendRequest(props) {
-    const [cities, setCities] = useState(null);
     const [searchedCities, setSearchedCities] = useState([]);
 
-    const [addresses, setAddresses] = useState([]);
+    const [storeAddresses, setStoreAddresses] = useState(false);
     const [searchAddresses, setSearchAddresses] = useState([]);
 
     const [city, setCity] = useState(null);
@@ -19,37 +19,35 @@ function SendRequest(props) {
         phone: "",
     });
     const { deleteAllProducts } = useProduct();
-    const { createOrder } = useRequestsMethods();
+    const { createOrder, getNpCities, getNpWarhouses } = useRequestsMethods();
 
     useEffect(() => {
-        const storageCities = window.localStorage.getItem("cities");
-        const storageAddress = window.localStorage.getItem("adress");
-        if (storageCities) {
-            // console.log("from cookie");
-            setCities(JSON.parse(storageCities));
-        } else {
-            getCities();
-        }
-        if (storageAddress) {
-            // console.log("from cookie");
-            setAddresses(JSON.parse(storageAddress));
-        } else {
-            getAdresses();
-        }
-
-        // console.log(storageCities);
-    }, []);
-    useEffect(() => {
+        setSearchAddresses([]);
+        setAddress(null);
         if (city) {
-            //load address
-            setSearchAddresses(
-                addresses.filter((item) => item.cityRef === city.value)
-            );
-        } else {
-            setSearchAddresses([]);
+            //load warhaose
+            getNpWarhouses(city.value)
+                .then(({ data }) => {
+                    if (data.length > 0) {
+                        const wh = data.map((item) => ({
+                            value: item.ref,
+                            label: item.warehouse,
+                        }));
+                        if (wh.length > 100) {
+                            setStoreAddresses(wh);
+                        } else {
+                            setSearchAddresses(wh);
+                        }
+                    } else {
+                        setSearchAddresses([]);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    toast.error("Ошибка");
+                });
         }
     }, [city]);
-
     return (
         <div
             className="container container-request"
@@ -74,80 +72,69 @@ function SendRequest(props) {
                     value={inputs.phone}
                     onChange={changeInput}
                 />
-                {!cities ? (
-                    "Завантаження міст"
-                ) : (
-                    <>
-                        <p className="head">Адреса "нової пошти":</p>
-                        <Select
-                            className="basic-select first-select"
-                            classNamePrefix="select"
-                            // defaultValue={colourOptions[0]}
-                            isDisabled={false}
-                            placeholder={"Місто"}
-                            noOptionsMessage={() =>
-                                "Почніть вводити назву вашого міста"
-                            }
-                            isLoading={false}
-                            isClearable={true}
-                            isRtl={false}
-                            isSearchable={true}
-                            name="city"
-                            options={searchedCities}
-                            onChange={(val) => {
-                                // console.log(val);
-                                setCity(val);
-                            }}
-                            onInputChange={(val) => {
-                                if (val.length > 2) {
-                                    setSearchedCities(
-                                        cities
-                                            .filter((item) =>
-                                                item.label
-                                                    .toLowerCase()
-                                                    .includes(val.toLowerCase())
-                                            )
-                                            .sort(
-                                                (a, b) =>
-                                                    a.label.length -
-                                                    b.label.length
-                                            )
+                <p className="head">Адреса "нової пошти":</p>
+                <Select
+                    className="basic-select first-select"
+                    classNamePrefix="select"
+                    // defaultValue={colourOptions[0]}
+                    isDisabled={false}
+                    placeholder={"Місто"}
+                    noOptionsMessage={() =>
+                        "Почніть вводити назву вашого міста"
+                    }
+                    isLoading={false}
+                    isClearable={true}
+                    isRtl={false}
+                    isSearchable={true}
+                    name="city"
+                    options={searchedCities}
+                    onChange={(val) => {
+                        setCity(val);
+                    }}
+                    onInputChange={(val) => {
+                        getCities(val);
+                    }}
+                />
+                <Select
+                    className="basic-select second-select"
+                    classNamePrefix="select"
+                    // defaultValue={colourOptions[0]}
+                    isDisabled={false}
+                    placeholder={"Відділення"}
+                    noOptionsMessage={() => {
+                        if (storeAddresses) {
+                            return "Варіантів забагато, почніть вводити адресу, номер відділення тощо (наприклад '№10')";
+                        }
+                        return "Виберіть місто спочатку";
+                    }}
+                    isLoading={false}
+                    isClearable={true}
+                    isRtl={false}
+                    isSearchable={true}
+                    name="address"
+                    options={searchAddresses}
+                    onChange={(val) => {
+                        setAddress(val);
+                    }}
+                    onInputChange={(val) => {
+                        if (storeAddresses) {
+                            if (val.length > 1) {
+                                setSearchAddresses(() => {
+                                    return storeAddresses.filter((item) =>
+                                        item.label.includes(val)
                                     );
-                                } else {
-                                    setSearchedCities([]);
-                                }
-                            }}
-                        />
-                        <Select
-                            className="basic-select second-select"
-                            classNamePrefix="select"
-                            // defaultValue={colourOptions[0]}
-                            isDisabled={false}
-                            placeholder={"Відділення"}
-                            noOptionsMessage={() => "Виберіть місто спочатку"}
-                            isLoading={false}
-                            isClearable={true}
-                            isRtl={false}
-                            isSearchable={true}
-                            name="address"
-                            options={searchAddresses}
-                            onChange={(val) => {
-                                // console.log(val);
-                                setAddress(val);
-                            }}
-                            onInputChange={(val) => {
-                                //     setSearchedCities(
-                                //         cities.filter((item) =>
-                                //             item.label.includes(val)
-                                //         )
-                                //     );
-                                // } else {
-                                //     setSearchedCities([]);
-                                // }
-                            }}
-                        />
-                    </>
-                )}
+                                });
+                            }
+                        }
+                    }}
+                />
+            </div>
+            <div className="radios">
+                <div className="head">Тип оплаты:</div>
+                <input type="radio" name="pay" id="card" />
+                <label htmlFor="card">Картой</label>
+                <input type="radio" name="pay" id="postpay" />
+                <label htmlFor="postpay">На почте</label>
             </div>
             <div className="btn-send" onClick={sendOrder}>
                 Замовити
@@ -162,18 +149,9 @@ function SendRequest(props) {
             if (city?.label.length === 0) return;
 
             const { products, toggleCart } = props;
-            const productText = products
-                .map((product, index) => {
-                    return `${index + 1}. ${
-                        product.title + " " + product.version
-                    } (${product.price} uah/шт) - ${product.count} шт.`;
-                })
-                .join("\n");
             const totalSumm = products.reduce((acc, product) => {
                 return acc + product.price * product.count;
             }, 0);
-            const text = `🤑 Замовлення!\n${productText}\n\n💸Загальна сума: ${totalSumm} uah\n\n🤴 ${name}\n📱 ${phone}\n\n🚚 Доставка:\n🌃 ${city.label}\n🏠 ${address.label}`;
-
             const order = {
                 products,
                 user: {
@@ -205,66 +183,33 @@ function SendRequest(props) {
         }
     }
 
-    async function getAdresses() {
-        const getWarehouses = {
-            apiKey: "7ee651cbd1e4949ba3b7b2c70975317c",
-            modelName: "Address",
-            calledMethod: "getWarehouses",
-        };
-        try {
-            const { data } = await axios.post(
-                "https://api.novaposhta.ua/v2.0/json/",
-                getWarehouses
-            );
-            console.log(data);
-            const addressData = data.data.map((item) => {
-                return {
-                    label: item.Description,
-                    value: item.Ref,
-                    cityRef: item.CityRef,
-                };
-            });
-            setAddresses(addressData);
-            window.localStorage.setItem("adress", JSON.stringify(addressData));
-            return data;
-        } catch (err) {
-            console.log(err);
-            return err;
-        }
-    }
-    async function getCities() {
-        const citiesOption = {
-            apiKey: "7ee651cbd1e4949ba3b7b2c70975317c",
-            modelName: "Address",
-            calledMethod: "getCities",
-            methodProperties: {},
-        };
+    async function getCities(val) {
+        if (val.length < 3) {
+            setSearchedCities([]);
+        } else {
+            // setIsLoading(true);
 
-        try {
-            const { data } = await axios.post(
-                "https://api.novaposhta.ua/v2.0/json/",
-                citiesOption
-            );
-            console.log(data);
-            const citiesData = data.data.map((item) => {
-                return {
-                    label: item.Description,
-                    value: item.Ref,
-                };
-            });
-            setCities(citiesData);
-            window.localStorage.setItem("cities", JSON.stringify(citiesData));
-            return data;
-        } catch (err) {
-            console.log(err);
-            return err;
+            getNpCities(val)
+                .then(({ data }) => {
+                    if (data.length > 0) {
+                        setSearchedCities(
+                            data
+                                .map((item) => ({
+                                    value: item.ref,
+                                    label: item.city,
+                                }))
+                                .sort((a, b) => a.label.length - b.label.length)
+                        );
+                    } else {
+                        setSearchedCities([]);
+                    }
+
+                    // setIsLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
-        // return axios
-        //     .post("https://api.novaposhta.ua/v2.0/json/", citiesOption)
-        //     .then(({ data }) => {
-        //         return data;
-        //     })
-        //     .catch((err) => err);
     }
     function changeInput(e) {
         setInputs({ ...inputs, [e.target.name]: e.target.value });

@@ -92,6 +92,36 @@ function RequestsMethodsProvider({ children }) {
         return protectedRequest(token, currentUser._id).delete(`user/${id}`);
     };
 
+    const updNp = () => {
+        return protectedRequest(token, currentUser._id).post(`np/`);
+    };
+    const updToken = (botToken) => {
+        return protectedRequest(token, currentUser._id).post(`bot/token`, {
+            token: botToken,
+        });
+    };
+    const getToken = () => {
+        return protectedRequest(token, currentUser._id).get(`bot/token`);
+    };
+    const getBotUsers = () => {
+        return protectedRequest(token, currentUser._id).get(`bot/users`);
+    };
+    const addBotUser = (id) => {
+        return protectedRequest(token, currentUser._id).post(`bot/user`, {
+            id,
+        });
+    };
+    const removeBotUser = (id) => {
+        return protectedRequest(token, currentUser._id).delete(`bot/${id}`);
+    };
+
+    //USER NP FIELDS
+    const getNpCities = (city) => {
+        return publicRequest().get("/np/city", { params: { city } });
+    };
+    const getNpWarhouses = (warhouse) => {
+        return publicRequest().get("/np/warhouses", { params: { warhouse } });
+    };
     const val = {
         publicRequest,
         loginAdmin,
@@ -101,6 +131,14 @@ function RequestsMethodsProvider({ children }) {
         changeUserPassword,
         addUser,
         deleteUser,
+        updNp,
+        updToken,
+        getToken,
+        getBotUsers,
+        addBotUser,
+        removeBotUser,
+        getNpCities,
+        getNpWarhouses,
     };
     return (
         <RequestsMethodsContext.Provider value={val}>
