@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { redux_logoutUser } from "../Redux/userControl";
 
+import { io } from "socket.io-client";
+
 export const RequestsMethodsContext = createContext(null);
 
 function RequestsMethodsProvider({ children }) {
@@ -12,19 +14,24 @@ function RequestsMethodsProvider({ children }) {
         (state) => state.persistedReducer.user
     );
     const dispatch = useDispatch();
-
+    const baseApi = "https://api.chillbar.com.ua/api/";
+    // const baseApi = "http://localhost:1489/api/";
+    const baseSocket = "https://api.chillbar.com.ua/";
+    // const baseSocket = "http://localhost:1489/";
     // console.log(user);
     const publicRequest = () =>
         axios.create({
-            baseURL: "http://localhost:1488/api/",
-            rejectUnauthorized: false,
+            baseURL: baseApi,
+            // rejectUnauthorized: false,
         });
+
+    const socket = io(baseSocket, { autoConnect: false });
 
     const protectedRequest = (token = null, user = null) => {
         const api = axios.create({
-            baseURL: "http://localhost:1488/api/",
+            baseURL: baseApi,
             headers: { token, user },
-            rejectUnauthorized: false, // ssl off while develop
+            // rejectUnauthorized: false, // ssl off while develop
         });
         api.interceptors.response.use(
             (response) => response,
@@ -67,6 +74,19 @@ function RequestsMethodsProvider({ children }) {
     const createOrder = (order) => {
         // console.log(order);
         return publicRequest().post("order/new", order);
+    };
+    const createPayOrder = (order) => {
+        // console.log(order);
+        return publicRequest().post("pay/new", order);
+    };
+    const getSingleOrder = (id) => {
+        return protectedRequest(token, currentUser._id).get(`order/${id}`);
+    };
+    const putOrderStatus = (id, status) => {
+        return protectedRequest(token, currentUser._id).put(`order/status`, {
+            id,
+            status,
+        });
     };
 
     //SETTINGS
@@ -122,6 +142,53 @@ function RequestsMethodsProvider({ children }) {
     const getNpWarhouses = (warhouse) => {
         return publicRequest().get("/np/warhouses", { params: { warhouse } });
     };
+    const getDeliveryPrice = (city, totalSumm) => {
+        return publicRequest().get("/np/price", {
+            params: { city, totalSumm },
+        });
+    };
+
+    //PRODUCTS
+    const getProducts = () => {
+        return publicRequest().get("/products/");
+    };
+    const crateProduct = (formData) => {
+        return protectedRequest(token, currentUser._id).post(
+            "/products/",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+    };
+    const deleteProduct = (id) => {
+        return protectedRequest(token, currentUser._id).delete("/products/", {
+            params: {
+                id,
+            },
+        });
+    };
+
+    const updateProduct = (FormData) => {
+        return protectedRequest(token, currentUser._id).put(
+            "/products/",
+            FormData,
+
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+    };
+
+    //payments
+    const getPayments = () => {
+        return protectedRequest(token, currentUser._id).get("/pay/");
+    };
+
     const val = {
         publicRequest,
         loginAdmin,
@@ -139,6 +206,17 @@ function RequestsMethodsProvider({ children }) {
         removeBotUser,
         getNpCities,
         getNpWarhouses,
+        getDeliveryPrice,
+        getProducts,
+        crateProduct,
+        deleteProduct,
+        updateProduct,
+        createPayOrder,
+        getPayments,
+        getSingleOrder,
+        putOrderStatus,
+
+        socket,
     };
     return (
         <RequestsMethodsContext.Provider value={val}>

@@ -17,7 +17,7 @@ export default function AdminHeader() {
                 </li>
                 <li
                     onClick={() => {
-                        changeLocation("/pays");
+                        changeLocation("/payments");
                     }}
                 >
                     Платежи

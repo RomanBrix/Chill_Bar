@@ -1,0 +1,37 @@
+@import "./enter.scss";
+
+.admin-page {
+    display: flex;
+    align-items: flex-start;
+    justify-content: stretch;
+    @import "./header.scss";
+
+    .admin {
+        width: 100%;
+        user-select: text;
+        .width-container {
+            width: calc(100%);
+            // background: red;
+            box-sizing: border-box;
+            padding: 25px 20px;
+            h1 {
+                margin-top: 0;
+                margin-bottom: 25px;
+            }
+        }
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 20px 0;
+            h1 {
+                width: 100%;
+            }
+        }
+        @import "./list.scss";
+        @import "./block.scss";
+        @import "./inputs.scss";
+        @import "./productList.scss";
+    }
+}

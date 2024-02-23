@@ -1,13 +1,22 @@
-import axios from "axios";
+// import axios from "axios";
 import { useEffect, useState } from "react";
 import useProduct from "../../hook/useProduct";
-import { notifyAdmin } from "../../notify";
+import { useNavigate } from "react-router-dom";
+// import { notifyAdmin } from "../../notify";
 import Select from "react-select";
 import useRequestsMethods from "../../hook/useRequestsMethods";
 import { toast } from "react-toastify";
 function SendRequest(props) {
     const [searchedCities, setSearchedCities] = useState([]);
-
+    const [totalSumm] = useState(
+        props.products.reduce((acc, product) => {
+            return acc + product.price * product.count;
+        }, 0)
+    );
+    const [loadingState, setLoadingState] = useState(false);
+    // const [deliveryCost, setDeliveryCost] = useState(null);
+    const [payType, setPayType] = useState("card");
+    // const totalSumm = ;
     const [storeAddresses, setStoreAddresses] = useState(false);
     const [searchAddresses, setSearchAddresses] = useState([]);
 
@@ -17,19 +26,30 @@ function SendRequest(props) {
     const [inputs, setInputs] = useState({
         name: "",
         phone: "",
+        lastName: "",
     });
+    const navigate = useNavigate();
+
     const { deleteAllProducts } = useProduct();
-    const { createOrder, getNpCities, getNpWarhouses } = useRequestsMethods();
+    const {
+        createOrder,
+        getNpCities,
+        getNpWarhouses,
+        getDeliveryPrice,
+        createPayOrder,
+    } = useRequestsMethods();
 
     useEffect(() => {
         setSearchAddresses([]);
         setAddress(null);
+        // setDeliveryCost(null);
         if (city) {
             //load warhaose
             getNpWarhouses(city.value)
                 .then(({ data }) => {
                     if (data.length > 0) {
                         const wh = data.map((item) => ({
+                            ...item,
                             value: item.ref,
                             label: item.warehouse,
                         }));
@@ -46,8 +66,19 @@ function SendRequest(props) {
                     console.log(err);
                     toast.error("Ошибка");
                 });
+
+            // getDeliveryPrice(city.value, totalSumm)
+            //     .then(({ data }) => {
+            //         // console.log(res);
+            //         setDeliveryCost(data);
+            //     })
+            //     .catch((err) => {
+            //         console.log(err);
+            //     });
         }
     }, [city]);
+    // console.log(city);
+    // console.log(address);
     return (
         <div
             className="container container-request"
@@ -63,6 +94,13 @@ function SendRequest(props) {
                     placeholder="Ваше ім'я"
                     name="name"
                     value={inputs.name}
+                    onChange={changeInput}
+                />
+                <input
+                    type="text"
+                    placeholder="Ваше прізвище"
+                    name="lastName"
+                    value={inputs.lastName}
                     onChange={changeInput}
                 />
                 <input
@@ -129,44 +167,109 @@ function SendRequest(props) {
                     }}
                 />
             </div>
+            {/* {deliveryCost && (
+                <p className="dev-cost">
+                    Приблизна вартість доставки:{" "}
+                    <span> {deliveryCost} Грн.</span>
+                </p>
+            )} */}
+
             <div className="radios">
-                <div className="head">Тип оплаты:</div>
-                <input type="radio" name="pay" id="card" />
-                <label htmlFor="card">Картой</label>
-                <input type="radio" name="pay" id="postpay" />
-                <label htmlFor="postpay">На почте</label>
+                <div className="head">Тип оплати:</div>
+
+                <div className="box">
+                    <input
+                        type="radio"
+                        name="pay"
+                        id="card"
+                        checked={payType === "card"}
+                        onChange={({ target }) => {
+                            setPayType(target.id);
+                        }}
+                    />
+                    <label htmlFor="card">Картою</label>
+                </div>
+                <div className="box">
+                    <input
+                        type="radio"
+                        name="pay"
+                        id="postpay"
+                        checked={payType === "postpay"}
+                        onChange={({ target }) => {
+                            setPayType(target.id);
+                        }}
+                    />
+                    <label htmlFor="postpay">На почті</label>
+                </div>
             </div>
             <div className="btn-send" onClick={sendOrder}>
-                Замовити
+                {loadingState ? "Зачекайте" : "Замовити"}
             </div>
         </div>
     );
 
     function sendOrder() {
-        const { name, phone } = inputs;
-        if (name.length > 3 && phone.length > 7) {
+        const { name, phone, lastName } = inputs;
+        if (loadingState) return;
+
+        setLoadingState(true);
+        if (name.length > 3 && lastName.length > 3 && phone.length > 7) {
             if (address?.label.length === 0) return;
             if (city?.label.length === 0) return;
 
             const { products, toggleCart } = props;
-            const totalSumm = products.reduce((acc, product) => {
-                return acc + product.price * product.count;
-            }, 0);
+
             const order = {
                 products,
                 user: {
-                    name,
+                    name: lastName + " " + name,
                     phone,
                     wearhouse: address.label,
                     city: city.label,
                 },
+                pay: payType === "card" ? "proccess" : "np",
                 summ: totalSumm,
+                np: {
+                    lastName: lastName,
+                    name: name,
+                    cityRef: city.value,
+                    warehouseRef: address.warehouseRef,
+                },
             };
             //CREATE SELECT TYPE OF PAY
 
-            createOrder(order).then((res) => {
-                console.log(res);
-            });
+            if (payType === "card") {
+                // go create order then payment then link and redirect
+                // alert("oplata");
+                createPayOrder(order).then(({ data }) => {
+                    console.log(data);
+                    if (data.status) {
+                        // window.open(data.payLink, "_blank");
+                        setLoadingState(false);
+
+                        window.location.href = data.payLink;
+                    }
+                });
+            } else {
+                createOrder(order)
+                    .then(({ data }) => {
+                        console.log(data);
+                        deleteAllProducts();
+                        setLoadingState(false);
+                        toggleCart(false);
+                        navigate("/thank/" + data.id);
+                        //чистим и редиректим на спасибо и ид заказа
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        toast.error(
+                            "Замовлення не додалося. Перевірте правильність введених даних або зв'яжіться з нами"
+                        );
+                    });
+            }
+
+            // setLoadingState(false);
+
             // console.log(text)
             // notifyAdmin(text);
             // setInputs({
@@ -180,6 +283,8 @@ function SendRequest(props) {
             // toggleCart(false);
         } else {
             console.log("error");
+            toast.error("Щось пішло не так...");
+            setLoadingState(false);
         }
     }
 

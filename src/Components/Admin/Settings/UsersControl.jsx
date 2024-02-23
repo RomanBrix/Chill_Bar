@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import useRequestsMethods from "../../../hook/useRequestsMethods";
+import moment from "moment";
 
 export default function UsersControl() {
     const [blockState, setBlockState] = useState(false);
@@ -19,6 +20,7 @@ export default function UsersControl() {
                     onClick={() => {
                         setBlockState(false);
                     }}
+                    className={`${!blockState ? "active" : ""}`}
                 >
                     Список Польозвателей
                 </li>
@@ -26,6 +28,7 @@ export default function UsersControl() {
                     onClick={() => {
                         setBlockState(true);
                     }}
+                    className={`${blockState ? "active" : ""}`}
                 >
                     Добавить
                 </li>
@@ -82,7 +85,9 @@ function UsersList({ list, changeUserPassword, updateUsersInfo, deleteUser }) {
                     <div className="item">
                         {item.username} {item._id === _id && <>(Это вы)</>}
                     </div>
-                    <div className="item">{item.createdAt}</div>
+                    <div className="item">
+                        {moment(item.createdAt).format("HH:mm/DD.MM.YYYY")}
+                    </div>
                     <div className="item func-item">
                         {item._id === _id ? (
                             "-"

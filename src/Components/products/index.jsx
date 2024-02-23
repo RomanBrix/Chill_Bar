@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import useProduct from "../../hook/useProduct";
 import { ReactComponent as Cart } from "../svg/cart.svg";
+import { ReactComponent as AvailSvg } from "./svg/avail.svg";
 
 import { ReactComponent as ChillBtn } from "../svg/chill.svg";
 import { ReactComponent as MaskkBtn } from "../svg/maskking.svg";
@@ -15,7 +16,7 @@ function Products(props) {
     return (
         <div
             className={`products forContainer ${
-                type === "mask" && "black-product"
+                type === "mask" ? "black-product" : ""
             }`}
         >
             <div className="container">
@@ -43,8 +44,21 @@ function Products(props) {
                         >
                             <MaskkBtn />
                         </div>
+                        <div
+                            className={`btn ${
+                                type === "napkins" && "active-toggle-btn"
+                            }`}
+                            onClick={() => {
+                                setType("napkins");
+                                setActiveFilters([]);
+                            }}
+                        >
+                            <span>Серветки</span>
+                        </div>
                     </div>
-                    <div className="filter-btns">{renderFilterBtns()}</div>
+                    {type !== "napkins" && (
+                        <div className="filter-btns">{renderFilterBtns()}</div>
+                    )}
                 </div>
                 <div className="slider">{renderProduct()}</div>
             </div>
@@ -52,6 +66,7 @@ function Products(props) {
     );
 
     function renderFilterBtns() {
+        console.log(products);
         const allBtns = [
             ...new Set(
                 products
@@ -60,7 +75,7 @@ function Products(props) {
             ),
         ];
 
-        console.log(allBtns);
+        // console.log(allBtns);
         // const uniqueBtns = [...new Set(allBtns)];
         return allBtns.map((item, index) => {
             return (
@@ -91,7 +106,9 @@ function Products(props) {
                 if (activeFilters.length === 0) return true;
                 return activeFilters.includes(item.tyagi);
             })
+            .sort((a) => (a.availability ? -1 : 1))
             .map((item, index) => {
+                // console.log(item.availability);
                 return (
                     <div className={`block`} key={index}>
                         <div className="front">
@@ -116,11 +133,30 @@ function Products(props) {
                             <div className="info">
                                 <h2>{item.title}</h2>
                                 <p>{item.version}</p>
+                                {type === "napkins" && (
+                                    <>
+                                        <p>Країна-виробник: {item.country}</p>
+                                        <p>Бренд: {item.brand}</p>
+                                    </>
+                                )}
+                                <p className="avail">
+                                    {!item.availability && (
+                                        <>
+                                            <AvailSvg /> Тимчасово закінчився
+                                        </>
+                                    )}
+                                </p>
                                 <div className="price">{item.price} UAH</div>
                                 <div
                                     className="cart"
                                     onClick={() => {
-                                        addToCart(item.id);
+                                        if (!item.availability) {
+                                            toast.warning(
+                                                "Вибачте, нема в наявності"
+                                            );
+                                            return;
+                                        }
+                                        addToCart(item._id);
                                         toast("Товар додано в корзину", {
                                             onClick: () => {
                                                 // alert("click");

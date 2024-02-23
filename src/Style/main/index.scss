@@ -1,8 +1,16 @@
-#main-page{
-    @media (max-width:767px){
+#main-page {
+    @media (max-width: 767px) {
         overflow: hidden;
     }
-    @import './intro.scss';
-    @import './slider.scss';
-    @import './about.scss';
+    .info-msg {
+        width: 100%;
+        background: #ff9966;
+        box-sizing: border-box;
+        padding: 8px;
+        text-align: center;
+        color: #fff;
+    }
+    @import "./intro.scss";
+    @import "./slider.scss";
+    @import "./about.scss";
 }

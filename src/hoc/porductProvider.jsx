@@ -1,724 +1,27 @@
 import Cookies from "js-cookie";
 import { createContext, useEffect, useState } from "react";
+import useRequestsMethods from "../hook/useRequestsMethods";
 // import Cookies from 'js-cookie'
 
 export const ProductContext = createContext(null);
 
-const tovar = [
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Соковитий лід",
-        img: "/src/products/lushicemiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "0",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Ананасовий лід",
-        img: "/src/products/pineappleicemiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "1",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Полуниця Ківі",
-        img: "/src/products/strawberrykiwimiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "2",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Крижаний Skittles",
-        img: "/src/products/iceskittlesmiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "3",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Персик Манго",
-        img: "/src/products/peachmangomiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "4",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Алое Виноград",
-        img: "/src/products/aloegrapemiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "5",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Апельсиновий лід",
-        img: "/src/products/orangeice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "6",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Алое чорна смородина",
-        img: "/src/products/aloeblackberry.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "7",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Ягідний мікс",
-        img: "/src/products/mixedberries.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "8",
-    },
-
-    //MASSSSK
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Ананас лімонад",
-        img: "/src/products/gt/ananasLimonad.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "9",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Апельсин",
-        img: "/src/products/gt/apelsin.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "10",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Банан",
-        img: "/src/products/gt/banan.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "11",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Кава-Табак",
-        img: "/src/products/gt/coffetabak.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "12",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Кола - Лід",
-        img: "/src/products/gt/colaIce.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "13",
-    },
-
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Диня",
-        img: "/src/products/gt/dunya.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "14",
-    },
-
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Енергія",
-        img: "/src/products/gt/energy.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "15",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Фруктовий мікс",
-        img: "/src/products/gt/fruits.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "16",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Горіх",
-        img: "/src/products/gt/gorih.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "17",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Зелене Яблуко",
-        img: "/src/products/gt/greenApple.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "18",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Грейфрукт та чай з медом",
-        img: "/src/products/gt/greyChaiMed.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "19",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Грейфрукт та полуниця",
-        img: "/src/products/gt/greyPolun.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "20",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Гуава та Лід",
-        img: "/src/products/gt/guavavIce.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "21",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Кавун",
-        img: "/src/products/gt/yura.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "22",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Полуниця",
-        img: "/src/products/gt/klubnika.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "23",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Кокос",
-        img: "/src/products/gt/kokos.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "24",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Малина та смородина",
-        img: "/src/products/gt/malina.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "25",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Манго та Лід",
-        img: "/src/products/gt/mangoIce.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "26",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "М`ята",
-        img: "/src/products/gt/myata.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "27",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "OMG",
-        img: "/src/products/gt/omg.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "28",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Персик",
-        img: "/src/products/gt/persik.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "29",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Ром та Лід",
-        img: "/src/products/gt/rom.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "30",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Табак",
-        img: "/src/products/gt/tabak.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "31",
-    },
-    {
-        tyagi: 500,
-        type: "mask",
-        title: "Maskking gt",
-        price: "230",
-        version: "Ягодний мікс",
-        img: "/src/products/gt/yagodi.png",
-        info: "Розмір 12 * 103 мм. Ємкість акумулятора 350 мАч. Об’єм картриджу 2.0 мл. Кількість затяжок близько 500. Нікотин 5%. Виробник Maskking",
-        id: "32",
-    },
-
-    //pro
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "OMG",
-        img: "/src/products/pro/omg.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "33",
-    },
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "Ананасовий лімонад",
-        img: "/src/products/pro/ananas.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "34",
-    },
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "Вишня",
-        img: "/src/products/pro/cherry.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "35",
-    },
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "Кавун з льодом",
-        img: "/src/products/pro/yura.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "36",
-    },
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "Солодкий банан",
-        img: "/src/products/pro/banan.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "37",
-    },
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "Яблочне шампанське",
-        img: "/src/products/pro/applShamp.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "38",
-    },
-    {
-        tyagi: 1000,
-        type: "mask",
-        title: "Maskking Pro",
-        price: "275",
-        version: "Ягідний мікс",
-        img: "/src/products/pro/yagodu.png",
-        info: "Розмір 18 * 104 мм. Ємкість акумулятора 550 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1000. Нікотин 5%. Виробник Maskking",
-        id: "39",
-    },
-
-    // promax
-    {
-        tyagi: 1500,
-        type: "mask",
-        title: "Maskking Pro Max",
-        price: "350",
-        version: "Виноград",
-        img: "/src/products/promax/grape.png",
-        info: "Розмір 21,9 * 103 мм. Ємкість акумулятора 850 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1500. Нікотин 5%. Виробник Maskking",
-        id: "40",
-    },
-    {
-        tyagi: 1500,
-        type: "mask",
-        title: "Maskking Pro Max",
-        price: "350",
-        version: "Лимон та Ягоди",
-        img: "/src/products/promax/lemon.png",
-        info: "Розмір 21,9 * 103 мм. Ємкість акумулятора 850 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1500. Нікотин 5%. Виробник Maskking",
-        id: "41",
-    },
-    {
-        tyagi: 1500,
-        type: "mask",
-        title: "Maskking Pro Max",
-        price: "350",
-        version: "Гуава та Малина",
-        img: "/src/products/promax/promax_guava.png",
-        info: "Розмір 21,9 * 103 мм. Ємкість акумулятора 850 мАч. Об’єм картриджу 3.5 мл. Кількість затяжок близько 1500. Нікотин 5%. Виробник Maskking",
-        id: "42", // SDASDASDASDASDASDASDASDASD
-    },
-
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Чорничний Лід",
-        img: "/src/products/blueberryicemiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "43",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Ягоди та лід",
-        img: "/src/products/bluerazzmiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "44",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Подвійне Яблуко",
-        img: "/src/products/doubleapplemiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "45",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Клейкі Цукерки",
-        img: "/src/products/gummycandymiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "46",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Манговий Лід",
-        img: "/src/products/mangoicemiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "47",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Молочний Банан",
-        img: "/src/products/milkbananamiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "48",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "М'ята",
-        img: "/src/products/mintmiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "49",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Ягодний мікс",
-        img: "/src/products/mixedberriesmiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "50",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Полуничне Морозиво",
-        img: "/src/products/strawberryicecreammiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "51",
-    },
-    {
-        tyagi: 1800,
-        type: "chill",
-        title: "chillbar 1800",
-        price: "345",
-        version: "Тютюн",
-        img: "/src/products/tobaccomiddle.png",
-        info: "Розміри 22.4мм*13.4мм*116.8мм Ємність акумулятора: 900 мАч; Об`єм картриджу: 5.0 мл Кількість затяжок близько 1800; Виробник Chillbar. Нікотин 5%",
-        id: "52",
-    },
-
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Пишний Лід",
-        img: "/src/products/lushice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "53",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Банановий Лід",
-        img: "/src/products/bananaice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "54",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Чорничний Лід",
-        img: "/src/products/blueberryice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "55",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Кола-Лід",
-        img: "/src/products/colaice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "56",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Цукрова Вата",
-        img: "/src/products/cottoncandy.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "57",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Подвійне Яблуко",
-        img: "/src/products/doubleapple.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "58",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Енергетик",
-        img: "/src/products/energydrink.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "59",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Манговий Лід",
-        img: "/src/products/mangoice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "60",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Молочний Банан",
-        img: "/src/products/milkbanana.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "61",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "М'ята",
-        img: "/src/products/mint.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "62",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Апельсиновий мікс",
-        img: "/src/products/mixedorange.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "63",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Персиковий Лід",
-        img: "/src/products/peachice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "64",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Персик та Манго",
-        img: "/src/products/peachmango.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "65",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Ананасовий Лід",
-        img: "/src/products/ppineappleice.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "66",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Полуниця та Ківі",
-        img: "/src/products/strawberrykiwi.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "67",
-    },
-    {
-        tyagi: 2500,
-        type: "chill",
-        title: "chillbar 2500",
-        price: "400",
-        version: "Тютюн",
-        img: "/src/products/tobacco.png",
-        info: "Розміри 19.5 x 113 мм. Ємність акумулятора: 1300 мАч; Об`єм картриджу: 6.5 мл. Кількість затяжок близько 2500; Виробник Chillbar. Нікотин 5%",
-        id: "68",
-    },
-];
-
 export function ProductProvider({ children }) {
-    // const checkCookie = Cookies.get('user')
-    const [products, setProduct] = useState(tovar);
+    // const checkCookie = Cookies.get('user') tovar
+    const [products, setProduct] = useState([]);
+    // const [products, setProduct] = useState(tovar);
     const [productsCounter, setProductsCounter] = useState(0);
 
+    const { getProducts } = useRequestsMethods();
+
     useEffect(() => {
+        updateProductsData();
         count();
     }, []);
+    // console.log(products);
 
     function addProduct(id) {
         //add cookie
-        console.log("add: " + id);
+        // console.log("add: " + id);
         let savedProducts = Cookies.get("toBuy");
         if (savedProducts) {
             savedProducts = JSON.parse(savedProducts);
@@ -751,7 +54,7 @@ export function ProductProvider({ children }) {
         Cookies.set("toBuy", JSON.stringify(savedProducts));
         count(savedProducts);
 
-        console.log(savedProducts);
+        // console.log(savedProducts);
     }
     function deleteAllProducts() {
         Cookies.remove("toBuy");
@@ -770,8 +73,11 @@ export function ProductProvider({ children }) {
         const arrToReturn = [];
 
         for (const key in savedProducts) {
+            const productPush = products.filter((item) => item._id === key);
+            // console.log(productPush);
+            // console.log(key);
             arrToReturn.push({
-                ...products[key],
+                ...productPush[0],
                 count: savedProducts[key],
             });
         }
@@ -782,17 +88,35 @@ export function ProductProvider({ children }) {
     function getRandomProduct(id) {
         //get random products for slider
         const arr = [];
-
+        // console.log("go");
+        const avProd = products.filter((item) => item.availability);
+        // console.log(avProd);
+        if (products.length === 0) return [];
+        const loopLength = avProd.length > 9 ? 9 : avProd.length;
+        // console.log(loopLength);
         //variant DVA
-        while (arr.length !== 9) {
-            const rand = Math.floor(Math.random() * products.length);
+        while (arr.length !== loopLength) {
+            const rand = Math.floor(Math.random() * avProd.length);
             let check = true;
             arr.filter((arrItem) => {
-                if (products[rand].id === arrItem.id) check = false;
+                if (avProd[rand]._id === arrItem._id) check = false;
+                // if (products[rand].id === arrItem.id) check = false;
             });
-            if (check) arr.push(products[rand]);
+            if (check) arr.push(avProd[rand]);
         }
+        // console.log(arr);
         return arr;
+    }
+
+    function updateProductsData() {
+        getProducts()
+            .then(({ data }) => {
+                const naps = ownNapkinsData();
+                setProduct([...data, ...naps]);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     const val = {
@@ -803,6 +127,7 @@ export function ProductProvider({ children }) {
         deleteProduct,
         deleteAllProducts,
         productsCounter,
+        updateProductsData,
     };
     return (
         <ProductContext.Provider value={val}>
@@ -834,4 +159,43 @@ function isEmpty(obj) {
         return false;
     }
     return true;
+}
+
+function ownNapkinsData() {
+    return [
+        {
+            _id: "nap_1",
+            availability: true,
+            createdAt: "2023-04-10T08:00:33.627Z",
+            img: "/src/products/nap/nap1.png",
+            info: "Упаковка із клапаном, Ароматизовані",
+            price: 15,
+            title: "Серветки вологі",
+            tyagi: 0,
+            type: "napkins",
+            updatedAt: "2023-07-07T17:16:43.822Z",
+            version: "Антибактеріальні з екстрактом алоє",
+            country: "Україна",
+            brand: "Chillbar",
+            qnty: 1,
+            qnty_papers: 15,
+        },
+        {
+            _id: "nap_2",
+            availability: true,
+            createdAt: "2023-04-10T08:00:33.627Z",
+            img: "/src/products/nap/nap2.png", //
+            info: "Упаковка із клапаном, Ароматизовані", //
+            price: 13, //
+            title: "Серветки вологі", //
+            tyagi: 0, //
+            type: "napkins", //
+            updatedAt: "2023-07-07T17:16:43.822Z",
+            version: "Антибактеріальні з вітамінним комплексом",
+            country: "Україна",
+            brand: "Chillbar",
+            qnty: 1,
+            qnty_papers: 15,
+        },
+    ];
 }

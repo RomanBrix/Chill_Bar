@@ -32,7 +32,7 @@ export default function OwnControl() {
                     value={inputs.rePass}
                     onChange={changeInput}
                 />
-                <label htmlFor="newPassword">Повторите Пароль</label>
+                <label htmlFor="rePass">Повторите Пароль</label>
             </div>
             <button onClick={changePass}>Сменить пароль</button>
         </div>

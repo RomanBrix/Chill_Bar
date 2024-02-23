@@ -19,6 +19,8 @@ import Enter from "./Components/Admin/Enter";
 import Orders from "./Components/Admin/orders";
 import ThankPage from "./Components/Thank";
 import Settings from "./Components/Admin/Settings";
+import AdminProducts from "./Components/Admin/products";
+import PaymentsList from "./Components/Admin/Payments/PaymentsList";
 
 function App() {
     const [cart, toggleCart] = useState(false);
@@ -30,10 +32,36 @@ function App() {
     }
 
     const location = useLocation();
-    // console.log(location);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    const pixelValue = (() => {
+        if (params?.pixel) {
+            window.localStorage.setItem("pixel", params.pixel);
+            return params.pixel;
+        }
+        const pixelFromStorage = window.localStorage.getItem("pixel");
+        if (pixelFromStorage) return JSON.parse(pixelFromStorage);
+
+        return null;
+    })();
+    // console.log(pixelValue);
+    useEffect(() => {
+        if (pixelValue) {
+            window.fbq("init", pixelValue);
+            console.log("fb_init=" + pixelValue);
+        } else {
+            console.log("no pixel");
+        }
+    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        if (pixelValue) {
+            window.fbq("track", "PageView");
+            console.log("fb_track_PageView=" + pixelValue);
+        }
+
+        // console.log(window.fbq);
     }, [location.pathname]);
     return (
         <div className="App">
@@ -64,6 +92,11 @@ function App() {
                         <Route path="/admin" element={<AdminLayout />}>
                             <Route index element={<Enter />} />
                             <Route path="orders/*" element={<Orders />} />
+                            <Route path="payments" element={<PaymentsList />} />
+                            <Route
+                                path="products/*"
+                                element={<AdminProducts />}
+                            />
                             <Route path="settings" element={<Settings />} />
                         </Route>
                     </Routes>

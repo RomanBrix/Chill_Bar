@@ -138,6 +138,8 @@ html {
                 @import "./layouts/footer.scss";
                 @import "./layouts/cart.scss";
 
+                @import "./admin/index.scss";
+
                 #blured {
                     transition: 0.25s;
                     display: flex;
@@ -161,6 +163,28 @@ html {
                 align-items: center;
                 justify-content: center;
                 z-index: -999999;
+            }
+
+            .thank {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: auto;
+                .container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    user-select: text;
+                    ul {
+                        li {
+                            margin-bottom: 10px;
+                            span {
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

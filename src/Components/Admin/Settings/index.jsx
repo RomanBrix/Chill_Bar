@@ -6,12 +6,12 @@ import UsersControl from "./UsersControl";
 export default function Settings() {
     return (
         <div className="admin">
-            <div className="width-container">
+            <div className="width-container flex-container">
                 <h1>Settings</h1>
                 <OwnControl />
-                <UsersControl />
-
                 <NpSettings />
+
+                <UsersControl />
                 <BotSettings />
             </div>
         </div>

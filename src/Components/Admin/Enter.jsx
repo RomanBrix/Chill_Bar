@@ -12,24 +12,28 @@ export default function Enter() {
     const { loginAdmin, changeUserPassword } = useRequestsMethods();
     const dispatch = useDispatch();
     return (
-        <div className="admin">
+        <div className="admin admin-enter">
             <div className="width-container">
-                <h1>Enter</h1>
-                <input
-                    type="text"
-                    placeholder="login"
-                    name="login"
-                    value={inputs.login}
-                    onChange={changeValue}
-                />
-                <input
-                    type="password"
-                    placeholder="password"
-                    name="password"
-                    value={inputs.password}
-                    onChange={changeValue}
-                />
-                <button onClick={login}>Login</button>
+                <div className="enter-container">
+                    <h1>Enter</h1>
+                    <input
+                        type="text"
+                        placeholder="login"
+                        name="login"
+                        value={inputs.login}
+                        onChange={changeValue}
+                    />
+                    <input
+                        type="password"
+                        placeholder="password"
+                        name="password"
+                        value={inputs.password}
+                        onChange={changeValue}
+                        onKeyDown={handleKeyPress}
+                    />
+                    <button onClick={login}>Login</button>
+                </div>
+
                 {/* <button onClick={() => {}}>Create User</button> */}
             </div>
         </div>
@@ -45,6 +49,11 @@ export default function Enter() {
     //         console.log(err);
     //     });
     // }
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            login();
+        }
+    }
     function login() {
         const { login, password } = inputs;
         // console.log(inputs);

@@ -2,15 +2,19 @@ import useProduct from "../../hook/useProduct";
 import { ReactComponent as Cart } from "../svg/cart.svg";
 import { ReactComponent as ArrowLeft } from "../svg/arrowLeft.svg";
 import { ReactComponent as ArrowRight } from "../svg/arrowRight.svg";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import anime from "animejs";
 import { toast } from "react-toastify";
 
 function Slider(props) {
     const [activeSlide, setActiveSlide] = useState(1);
     const { getRandomProduct, addProduct } = useProduct();
-    const [products] = useState(getRandomProduct());
-
+    const [products, setProducts] = useState(getRandomProduct());
+    const loadedProducts = useProduct().products.length;
+    // console.log(loadedProducts);
+    useEffect(() => {
+        setProducts(getRandomProduct());
+    }, [loadedProducts]);
     const containerWidth = useRef();
 
     return (
@@ -62,7 +66,7 @@ function Slider(props) {
                         >
                             <img src={item.img} alt={item.title} />
                             <div className="back">
-                                <p>Основні характеристики: {item.title}:</p>
+                                <p>Основні характеристики {item.title}:</p>
                                 <p>{item.info}</p>
                             </div>
                         </div>
@@ -73,7 +77,7 @@ function Slider(props) {
                             <div
                                 className="cart"
                                 onClick={() => {
-                                    addToCart(item.id);
+                                    addToCart(item._id);
                                     toast("Товар додано в корзину");
                                 }}
                             >

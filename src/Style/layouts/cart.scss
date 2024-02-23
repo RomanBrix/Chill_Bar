@@ -31,6 +31,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
+            overflow: auto;
         }
         @media (max-width: 1400px) {
             width: 90%;
@@ -403,6 +404,40 @@
             }
             z-index: 99;
         }
+        .dev-cost {
+            width: 250px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            margin-top: 0;
+            line-height: 21px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            span {
+                font-weight: bold;
+            }
+        }
+        .radios {
+            box-sizing: border-box;
+            width: 250px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            position: relative;
+            z-index: 22;
+            justify-content: space-between;
+            .head {
+                width: 100%;
+                margin-bottom: 5px;
+                padding-left: 10px;
+            }
+            .box {
+                width: 49%;
+                box-sizing: border-box;
+                padding-left: 3px;
+            }
+        }
         .btn-send {
             position: relative;
             z-index: 2;
@@ -414,7 +449,7 @@
             min-width: 100px;
             width: 250px;
             margin-top: auto;
-            margin-bottom: 20px;
+            // margin-bottom: 20px;
             text-align: center;
             cursor: pointer;
             transition: 0.25s;

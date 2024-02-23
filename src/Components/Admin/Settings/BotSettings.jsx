@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useRequestsMethods from "../../../hook/useRequestsMethods";
+import moment from "moment";
 
 export default function BotSettings() {
     const [token, setToken] = useState("");
@@ -120,17 +121,17 @@ function BotUserList({ addBotUser, getBotUsers, removeBotUser }) {
         <>
             <div className="how-to">
                 <p>Как добавить пользователя:</p>
-                <ul>
-                    <ol>Открыть бота по линку выше</ol>
-                    <ol>Запустить бота</ol>
-                    <ol>Написать "id"</ol>
-                    <ol>Бот выдаст ваш ID</ol>
-                    <ol>
+                <ol>
+                    <li>Открыть бота по линку выше</li>
+                    <li>Запустить бота</li>
+                    <li>Написать "id"</li>
+                    <li>Бот выдаст ваш ID</li>
+                    <li>
                         Скопировать id, нажать кнопку "Добавить Пользователя",
                         вставить скопированный id
-                    </ol>
-                    <ol>Теперь Вам будут приходить заказы</ol>
-                </ul>
+                    </li>
+                    <li>Теперь Вам будут приходить заказы</li>
+                </ol>
             </div>
             <button onClick={addUser}>Добавить Пользователя</button>
             <div className="list">
@@ -151,7 +152,9 @@ function BotUserList({ addBotUser, getBotUsers, removeBotUser }) {
                 <div className="list-item" key={index}>
                     <div className="item">{item.id}</div>
                     <div className="item">{item.username}</div>
-                    <div className="item">{item.createdAt}</div>
+                    <div className="item">
+                        {moment(item.createdAt).format("HH:mm/DD.MM.YYYY")}
+                    </div>
                     <div className="item">
                         <button
                             onClick={() => {

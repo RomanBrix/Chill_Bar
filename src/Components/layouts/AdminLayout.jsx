@@ -21,10 +21,10 @@ function AdminLayout(props) {
     if (pathname === "/admin") return <Outlet />;
     if (currentUser)
         return (
-            <>
+            <div className="admin-page">
                 <AdminHeader />
                 <Outlet />
-            </>
+            </div>
         );
 
     return <h2>Loading</h2>;
