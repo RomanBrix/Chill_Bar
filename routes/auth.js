@@ -5,12 +5,14 @@ const jwt = require("jsonwebtoken");
 // const { verifyTokenAndAdmin } = require("./verifyToken");
 
 //admin add
-// router.post("/add", async (req, res) => {
+// router.get("/add", async (req, res) => {
 //     const newUser = new User({
-//         username: req.body.username,
+//         // username: req.body.username,
+//         username: "rbrix",
 //         isAdmin: req.body.isAdmin || true,
 //         password: CryptoJS.AES.encrypt(
-//             req.body.password,
+//             // req.body.password,
+//             "test",
 //             process.env.PASS_SEC
 //         ).toString(),
 //     });

@@ -7,6 +7,7 @@ const WarehouseOfNpSchema = new Schema(
         // city_ru: { type: String },
 
         warehouse: { type: String },
+        warehouseRef: { type: String },
         // warehouse_ru: { type: String },
         ref: { type: String },
     },

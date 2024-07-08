@@ -13,8 +13,15 @@ const OrderSchema = new Schema(
         pay: { type: String, default: "np" }, // np- na pochte, success - ok, error - ne ok
         products: { type: mongoose.Schema.Types.Mixed },
         id: { type: String, unique: true },
-        status: { type: String, default: "new" },
+        status: { type: String, default: "new" }, // error, deleted, onDelivery, complete, [payed ? ]
         ttn: { type: String, default: null },
+        ttnRef: { type: String, default: null },
+        np: {
+            lastName: { type: String, default: null },
+            name: { type: String, default: null },
+            cityRef: { type: String, default: null },
+            warehouseRef: { type: String, default: null },
+        },
     },
     { timestamps: true }
 );

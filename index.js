@@ -9,13 +9,14 @@ const cors = require("cors");
 const http = require("http");
 
 const authRoute = require("./routes/auth");
-const orderRoute = require("./routes/orders");
+const { ordersRoute, getOrder } = require("./routes/orders");
 const userRoute = require("./routes/users");
-const npRoute = require("./routes/np");
+const { NpRoute } = require("./routes/np");
 const { botRoute } = require("./routes/bot");
-
+const productsRoute = require("./routes/products");
+const { PayRoute, changePayStatus } = require("./routes/pay");
+const SocketServer = require("socket.io").Server;
 // console.log(botRoute);
-// const productsRoute = require("./routes/products");
 // const filtersRoute = require("./routes/filters");
 // const checkRoute = require("./routes/check");
 
@@ -35,17 +36,30 @@ dotenv.config();
 const PORT = process.env.SERVER_PORT || 3000;
 const CLIENT_CORS_URL = process.env.CLIENT_CORS_URL || "*";
 const CLIENT_CORS_METHODS = process.env.CLIENT_CORS_METHODS || "GET,POST";
-
 //app.set("trust proxy", true);
-app.use(
-    cors({
-        origin: CLIENT_CORS_URL,
-        methods: CLIENT_CORS_METHODS,
-    })
-);
+console.log(CLIENT_CORS_METHODS);
+
+//"https://chillbar.com.ua"
+var corsOptions = {
+    origin: "*",
+    methods: CLIENT_CORS_METHODS,
+};
+
+// const corsDelegate = (req, callback) => {
+//     console.log(req.header("Origin"));
+//     callback(null, { origin: true });
+// };
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const server = http.createServer(app);
+
+const io = new SocketServer(server, {
+    cors: {
+        origin: CLIENT_CORS_URL,
+        methods: ["GET", "POST"],
+    },
+});
 
 mongoose.set("strictQuery", false);
 mongoose
@@ -54,17 +68,48 @@ mongoose
     .catch((err) => {
         console.log(err);
     });
+
 app.get("/", (req, res) => {
     res.status(200).send("ok");
 });
+app.get("/images/:file", function (req, res) {
+    // console.log(req.params);
+    const { file } = req.params;
+    console.log(file);
+
+    res.sendFile(__dirname + `/images/${file}`);
+});
+
+app.post("/pay-status", async (req, res) => {
+    console.log("PAY DATA POST:");
+    // console.log(req.params);
+    // console.log(req.query);
+    console.log(req.body);
+    await changePayStatus(req.body, io);
+    res.send("MOSKALI SOSAT`");
+});
+
 app.use("/api/auth", authRoute);
-app.use("/api/order", orderRoute);
+app.use("/api/order", ordersRoute);
 app.use("/api/user", userRoute);
-app.use("/api/np", npRoute);
+app.use("/api/np", NpRoute);
 app.use("/api/bot", botRoute);
-// app.use("/api/products", productsRoute);
-// app.use("/api/filters", filtersRoute);
-// app.use("/api/check", checkRoute);
+app.use("/api/products", productsRoute);
+app.use("/api/pay", PayRoute);
+
+io.on("connection", (socket) => {
+    // console.log("connected");
+    socket.on("join room", async (id) => {
+        socket.join(id);
+        console.log(id);
+        // socket.emit("connected room");
+        const order = await getOrder(id);
+        // console.log(order);
+
+        io.to(id).emit("order", order);
+        // console.log("ok globe!");
+    });
+});
 
 /*
 file upload 
