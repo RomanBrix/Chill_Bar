@@ -14,9 +14,9 @@ function RequestsMethodsProvider({ children }) {
         (state) => state.persistedReducer.user
     );
     const dispatch = useDispatch();
-    const baseApi = "https://api.chillbar.com.ua/api/";
+    const baseApi = "https://end.chillbar.com.ua/api/";
     // const baseApi = "http://localhost:1489/api/";
-    const baseSocket = "https://api.chillbar.com.ua/";
+    const baseSocket = "https://end.chillbar.com.ua/";
     // const baseSocket = "http://localhost:1489/";
     // console.log(user);
     const publicRequest = () =>
